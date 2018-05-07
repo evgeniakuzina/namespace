@@ -4,6 +4,15 @@
 2. Исключения - это способ отловить возможные ошибки в потенциально опасном коде, при этом быть уверенным в том, что он не вызовет фатальных ошибок и смерти программы. Также исключения помогают управлять потоком программы и направлять его в нужное русло. Исключения похожи на блок if-else, но с расширенным функционалом в плане безопасности работы программы.
 */
 
+function myAutoLoad($ClassName) {
+    $filePath = './Product/' . $className . '.class.php';
+    if (file_exists($filePath)) {
+        include "$filePath";
+    }
+}
+
+spl_autoload_register('myAutoLoad');
+
 namespace Product;
 
 abstract class SuperProduct {
@@ -26,22 +35,44 @@ abstract class SuperProduct {
 
 class TV extends SuperProduct {
     public $diagonal;
-    public $remoteControl;
-    
+    public $remoteControl;    
 }
-
 
 class Pen extends SuperProduct {
     public $refillColor;
     public $penLid;
 }
 
-
 class Duck extends SuperProduct {
     public $color;
-    public $age;
-    
+    public $age;    
 }
 
+namespace Order;
+
+class ShoppingCart extends SuperProduct {
+    protected $pcs;
+    public $total;
+
+    public function __get($price) {
+        echo $this->price;
+    }
+
+    public function removeObject($object) {
+        unset($object);
+    }
+
+    public function getTotal($pcs) {
+        $this->pcs = $pcs;
+        $total = $this->price * $this->pcs;
+    }
+
+}
+
+class Order extends ShoppingCart {
+    public function getMyOrder {
+        echo 'Ваш заказ: ' . $this->name . $this->pcs . 'шт. ' . 'Итого: ' . $this->total;
+    }
+}
 
 ?>
